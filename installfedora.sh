@@ -7,6 +7,9 @@ dnf -y update
 sudo dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 sudo dnf -y install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
+## Install rpm sphere
+sudo dnf -y install https://github.com/rpmsphere/noarch/raw/master/r/rpmsphere-release-38-1.noarch.rpm
+
 ### Install Nvidia
 ## Install devlopment software
 sudo dnf -y install kernel-devel kernel-headers gcc make dkms acpid libglvnd-glx libglvnd-opengl libglvnd-devel pkgconfig
@@ -66,14 +69,13 @@ sudo dnf -y install audacity
 sudo dnf -y install https://github.com/balena-io/etcher/releases/download/v1.19.21/balena-etcher-1.19.21-1.x86_64.rpm
 
 ### Install asusctl
-sudo dnf -y install systemd-devel libseat-devel mesa-libgbm-devel libinput-devel
-cd ~/Workspace/asusctl
-# git clone 
-git pull
-make
-sudo make install
+sudo dnf -y install asusctl
+sudo dnf -y install asusctl-rog-gui
+
+systemctl start asusd
 
 ### Install Vagrant
+sudo dnf -y install vagrant
 
 ### Install VirtualBox
 
