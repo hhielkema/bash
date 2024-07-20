@@ -78,9 +78,25 @@ systemctl start asusd
 sudo dnf -y install vagrant
 
 ### Install VirtualBox
+sudo touch /etc/yum.repos.d/virtualbox.repo
+sudo bash -c 'cat <<EOF>> /etc/yum.repos.d/virtualbox.repo
+[virtualbox]
+name=Fedora $releasever - $basearch - VirtualBox
+baseurl=http://download.virtualbox.org/virtualbox/rpm/fedora/$releasever/$basearch
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://www.virtualbox.org/download/oracle_vbox_2016.asc
+EOF'
 
+sudo rpm --import https://www.virtualbox.org/download/oracle_vbox_2016.asc
+sudo dnf -y install VirtualBox
+sudo akmods
+sudo systemctl restart vboxdrv.service
 
-
+### Install printer software
+sudo dnf -y install hplip-gui
+echo "Configure oa via CUPS!"
 
 ### Reboot laptop
 sudo reboot
