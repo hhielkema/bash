@@ -130,7 +130,8 @@ sudo dnf -y install vlc
 sudo dnf -y install audacity
 
 ### Balena Echer
-sudo dnf -y install https://github.com/balena-io/etcher/releases/download/v1.19.21/balena-etcher-1.19.21-1.x86_64.rpm
+latest_echer_tag=$(git ls-remote --tags  https://github.com/balena-io/etcher|awk {'print$2'}|cut -d/ -f3|sort -V|tail -2|head -1|sed 's/^v\(.*\)/\1/') # 1.19.25^{}
+sudo dnf -y install https://github.com/balena-io/etcher/releases/download/v1.19.21/balena-etcher-${latest_echer_tag}.x86_64.rpm
 
 ### Install asusctl
 sudo dnf -y install asusctl
