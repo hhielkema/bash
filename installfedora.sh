@@ -113,33 +113,33 @@ sudo bash -c 'cat <<EOF> ~/.config/Code/User/settings.json
 EOF'
 ###### End VScode
 
-## gnome-shell-extensions
+###### gnome-shell-extensions
 sudo dnf install gnome-extensions-app
 sudo dnf install gnome-shell-extension-dash-to-dock
 
-### Install Google Chrome
+###### Install Google Chrome
 sudo dnf -y install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
 
-### Install Mozilla Thunderbird
+###### Install Mozilla Thunderbird
 sudo dnf -y install thunderbird
 
-### Install VLC
+###### Install VLC
 sudo dnf -y install vlc
 
-### Install Audacity
+###### Install Audacity
 sudo dnf -y install audacity
 
-### Balena Echer
-latest_echer_tag=$(git ls-remote --tags  https://github.com/balena-io/etcher|awk {'print$2'}|cut -d/ -f3|sort -V|tail -2|head -1|sed 's/^v\(.*\)/\1/') # 1.19.25^{}
-sudo dnf -y install https://github.com/balena-io/etcher/releases/download/v1.19.21/balena-etcher-${latest_echer_tag}.x86_64.rpm
+###### Balena Echter
+latest_etcher_tag=$(git ls-remote --tags  https://github.com/balena-io/etcher|awk {'print$2'}|cut -d/ -f3|sort -V|tail -2|head -1|sed 's/^v\(.*\)/\1/') # 1.19.25^{}
+sudo dnf -y install https://github.com/balena-io/etcher/releases/download/v${latest_etcher_tag}/balena-etcher-${latest_etcher_tag}-1.x86_64.rpm
 
-### Install asusctl
+###### Install asusctl
 sudo dnf -y install asusctl
 sudo dnf -y install asusctl-rog-gui
 
 systemctl start asusd
 
-### Install Vagrant
+###### Install Vagrant
 sudo dnf -y install vagrant
 
 ### Install VirtualBox
@@ -163,10 +163,12 @@ sudo rpm --import https://www.virtualbox.org/download/oracle_vbox_2016.asc
 ## Install the Virtualbox rpm(s)
 sudo dnf -y install VirtualBox
 
-virtualbox_rpm=$(rpm -qa|grep -e ^VirtualBox-[0-9])     # VirtualBox-7.1.2-1.fc40.x86_64
+virtualbox_rpm=$(rpm -qa|grep -e ^VirtualBox-[0-9])                          # VirtualBox-7.1.2-1.fc40.x86_64
 virtualbox_version=$(rpm -q --queryformat '%{VERSION}' ${virtualbox_rpm})    # 7.1.2
 virtualbox_extpack="Oracle_VirtualBox_Extension_Pack-${virtualbox_version}.vbox-extpack"
 curl https://download.virtualbox.org/virtualbox/${virtualbox_version}/${virtualbox_extpack} -o ~/Downloads/virtualbox/${virtualbox_extpack}
+
+# FIXME, how to add extpack to virtualbox via commandline
 
 ## Activate Virtualbox
 sudo akmods
