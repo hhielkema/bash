@@ -161,7 +161,11 @@ sudo rpm --import https://www.virtualbox.org/download/oracle_vbox_2016.asc
 
 ## Install the Virtualbox rpm(s)
 sudo dnf -y install VirtualBox
-https://download.virtualbox.org/virtualbox/7.0.20/Oracle_VM_VirtualBox_Extension_Pack-7.0.20.vbox-extpack
+
+virtualbox_rpm=$(rpm -qa|grep -e ^VirtualBox-[0-9])     # VirtualBox-7.1.2-1.fc40.x86_64
+virtualbox_version=$(rpm -q --queryformat '%{VERSION}' ${virtualbox_rpm})    # 7.1.2
+virtualbox_extpack="Oracle_VirtualBox_Extension_Pack-${virtualbox_version}.vbox-extpack"
+curl https://download.virtualbox.org/virtualbox/${virtualbox_version}/${virtualbox_extpack} -o ~/Downloads/virtualbox/${virtualbox_extpack}
 
 ## Activate Virtualbox
 sudo akmods
