@@ -22,7 +22,7 @@ sudo dnf -y install kernel-devel kernel-headers gcc make dkms acpid libglvnd-glx
 
 sudo dnf -y update
 sudo dnf -y makecache
-sudo dnf -y install akmod-nvidia xorg-x11-drv-nvidia-cuda
+sudo dnf -y install akmod-nvidia-580xx xorg-x11-drv-nvidia-580xx-cuda
 
 ###### Install VScode
 sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
@@ -45,80 +45,82 @@ sudo dnf -y check-update
 sudo dnf -y install code
 
 #### Install code extensions
-code -install-extension davidanson.vscode-markdownlint
-code -install-extension esbenp.prettier-vscode
-code -install-extension github.copilot
-code -install-extension github.copilot-chat
-code -install-extension keesschollaart.vscode-home-assistant
-code -install-extension ms-azuretools.vscode-docker
-code -install-extension ms-kubernetes-tools.vscode-kubernetes-tools
-code -install-extension ms-python.debugpy
-code -install-extension ms-python.python
-code -install-extension ms-python.vscode-pylance
-code -install-extension ms-vscode.makefile-tools
-code -install-extension ms-vscode.remote-explorer
-code -install-extension ms-vscode-remote.remote-containers
-code -install-extension ms-vscode-remote.remote-ssh
-code -install-extension ms-vscode-remote.remote-ssh-edit
-code -install-extension pkief.material-icon-theme
-code -install-extension redhat.ansible
-code -install-extension redhat.vscode-yaml
-code -install-extension rust-lang.rust-analyzer
-code -install-extension trunk.io
-code -install-extension zainchen.json
+# code -install-extension davidanson.vscode-markdownlint
+# code -install-extension esbenp.prettier-vscode
+# code -install-extension github.copilot
+# code -install-extension github.copilot-chat
+# code -install-extension keesschollaart.vscode-home-assistant
+# code -install-extension ms-azuretools.vscode-docker
+# code -install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+# code -install-extension ms-python.debugpy
+# code -install-extension ms-python.python
+# code -install-extension ms-python.vscode-pylance
+# code -install-extension ms-vscode.makefile-tools
+# code -install-extension ms-vscode.remote-explorer
+# code -install-extension ms-vscode-remote.remote-containers
+# code -install-extension ms-vscode-remote.remote-ssh
+# code -install-extension ms-vscode-remote.remote-ssh-edit
+# code -install-extension pkief.material-icon-theme
+# code -install-extension redhat.ansible
+# code -install-extension redhat.vscode-yaml
+# code -install-extension rust-lang.rust-analyzer
+# code -install-extension trunk.io
+# code -install-extension zainchen.json
 
 #### Set the settings.json
-install -d ~/.config/Code/User
-sudo touch /~/.config/Code/User/settings.json
-sudo bash -c 'cat <<EOF> ~/.config/Code/User/settings.json
-{
-    "workbench.colorTheme": "Monokai Dimmed",
-    "workbench.iconTheme": "material-icon-theme",
-    "workbench.editor.enablePreview": false,
-    "redhat.telemetry.enabled": true,
-    "files.exclude": {
-        "**/.trunk/*actions/": true,
-        "**/.trunk/*logs/": true,
-        "**/.trunk/*notifications/": true,
-        "**/.trunk/*out/": true,
-        "**/.trunk/*plugins/": true
-    },
-    "trunk.trunkGrayOutNonBlockingIssues": false,
-    "files.watcherExclude": {
-        "**/.trunk/*actions/": true,
-        "**/.trunk/*logs/": true,
-        "**/.trunk/*notifications/": true,
-        "**/.trunk/*out/": true,
-        "**/.trunk/*plugins/": true
-    },
-    "vs-kubernetes": {
-        "vscode-kubernetes.helm-path-linux": "~/.local/state/vs-kubernetes/tools/helm/linux-amd64/helm",
-        "vscode-kubernetes.kubectl-path-linux": "~/.local/state/vs-kubernetes/tools/kubectl/kubectl",
-        "vscode-kubernetes.minikube-path-linux": "~/.local/state/vs-kubernetes/tools/minikube/linux-amd64/minikube"
-    },
-    "terminal.explorerKind": "both",
-    "terminal.external.linuxExec": "tilix",
-    "terminal.sourceControlRepositoriesKind": "both",
-    "terminal.integrated.automationProfile.linux": {},
-    "git.confirmSync": false,
-    "git.autofetch": true,
-    "git.suggestSmartCommit": false,
-    "editor.minimap.enabled": false,
-    "editor.defaultFormatter": "trunk.io",
-    "editor.fontFamily": "JetBrains Mono",
-    "editor.fontSize": 13,
-    "editor.fontLigatures": true,
-    "editor.fontVariations": false
-}
-EOF'
+# install -d ~/.config/Code/User
+# sudo touch /~/.config/Code/User/settings.json
+# sudo bash -c 'cat <<EOF> ~/.config/Code/User/settings.json
+# {
+#     "workbench.colorTheme": "Monokai Dimmed",
+#     "workbench.iconTheme": "material-icon-theme",
+#     "workbench.editor.enablePreview": false,
+#     "redhat.telemetry.enabled": true,
+#     "files.exclude": {
+#         "**/.trunk/*actions/": true,
+#         "**/.trunk/*logs/": true,
+#         "**/.trunk/*notifications/": true,
+#         "**/.trunk/*out/": true,
+#         "**/.trunk/*plugins/": true
+#     },
+#     "trunk.trunkGrayOutNonBlockingIssues": false,
+#     "files.watcherExclude": {
+#         "**/.trunk/*actions/": true,
+#         "**/.trunk/*logs/": true,
+#         "**/.trunk/*notifications/": true,
+#         "**/.trunk/*out/": true,
+#         "**/.trunk/*plugins/": true
+#     },
+#     "vs-kubernetes": {
+#         "vscode-kubernetes.helm-path-linux": "~/.local/state/vs-kubernetes/tools/helm/linux-amd64/helm",
+#         "vscode-kubernetes.kubectl-path-linux": "~/.local/state/vs-kubernetes/tools/kubectl/kubectl",
+#         "vscode-kubernetes.minikube-path-linux": "~/.local/state/vs-kubernetes/tools/minikube/linux-amd64/minikube"
+#     },
+#     "terminal.explorerKind": "both",
+#     "terminal.external.linuxExec": "tilix",
+#     "terminal.sourceControlRepositoriesKind": "both",
+#     "terminal.integrated.automationProfile.linux": {},
+#     "git.confirmSync": false,
+#     "git.autofetch": true,
+#     "git.suggestSmartCommit": false,
+#     "editor.minimap.enabled": false,
+#     "editor.defaultFormatter": "trunk.io",
+#     "editor.fontFamily": "JetBrains Mono",
+#     "editor.fontSize": 13,
+#     "editor.fontLigatures": true,
+#     "editor.fontVariations": false
+# }
+# EOF'
 ###### End VScode
 
 ###### gnome-shell-extensions
-sudo dnf install gnome-extensions-app
-sudo dnf install gnome-shell-extension-dash-to-dock
+sudo dnf -y install gnome-extensions-app
+sudo dnf -y install gnome-shell-extension-dash-to-panel
 
 ###### Install Google Chrome
-sudo dnf -y install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+sudo dnf -y install fedora-workstation-repositories
+sudo dnf config-manager --setopt google-chrome.enabled=1
+sudo dnf -y install google-chrome-stable
 
 ###### Install Mozilla Thunderbird
 sudo dnf -y install thunderbird
@@ -185,6 +187,18 @@ sudo usermod -aG nordvpn "${USER}"
 
 ### Generic
 sudo dnf -y install vim bash-completion
+
+### gnome-tweaks
+sudo dnf -y install gnome-tweaks
+
+### Rclone
+sudo dnf -y install rclone fuse
+mkdir ~/gdrive
+rclone config
+rclone mount gdrive: ~/gdrive --vfs-cache-mode full &
+
+
+
 
 ### Reboot laptop
 sudo reboot
