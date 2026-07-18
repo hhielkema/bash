@@ -14,7 +14,17 @@ sudo dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-r
 sudo dnf -y install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 ##### Install rpm sphere
-sudo dnf -y install https://github.com/rpmsphere/noarch/raw/master/r/rpmsphere-release-38-1.noarch.rpm
+sudo touch /etc/yum.repos.d/rpmsphere.repo
+sudo bash -c 'cat <<EOF> /etc/yum.repos.d/rpmsphere-noarch.repo
+[rpmsphere-noarch]
+name=RPM Sphere - Noarch
+baseurl=https://github.com/rpmsphere/noarch/raw/master/
+skip_if_unavailable=True
+gpgcheck=0
+enabled=1
+EOF'
+
+sudo dnf -y install rpmsphere-release
 
 ###### Install Nvidia
 ##### Install devlopment software
@@ -195,9 +205,15 @@ sudo dnf -y install gnome-tweaks
 sudo dnf -y install rclone fuse
 mkdir ~/gdrive
 rclone config
-rclone mount gdrive: ~/gdrive --vfs-cache-mode full &
+systemctl --user daemon-reload
+systemctl --user enable rclone-gdrive.service
+systemctl --user start rclone-gdrive.service
+loginctl enable-linger $USER 
 
-
+### Browser Brave
+sudo dnf -y install dnf-plugins-core
+sudo dnf -y config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+sudo dnf -y install brave-browser
 
 
 ### Reboot laptop
