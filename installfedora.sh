@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ###### Sudo
-
-sudo sed -i 's/^#\s*\(%wheel\s*ALL=(ALL)\s*NOPASSWD:\s*ALL\)/\1/' /etc/sudoers
-sudo usermod -aG wheel "${USER}"
-
+function enable_sudo(){
+  sudo sed -i 's/^#\s*\(%wheel\s*ALL=(ALL)\s*NOPASSWD:\s*ALL\)/\1/' /etc/sudoers
+  sudo usermod -aG wheel "${USER}"
+}
 
 ###### General update
 function dnf_update_all(){
@@ -19,7 +19,7 @@ function install_rpmfusion(){
 }
 
 ##### Install rpm sphere
-function install_rpmspheren(){
+function install_rpmsphere(){
   sudo touch /etc/yum.repos.d/rpmsphere.repo
   sudo bash -c 'cat <<EOF> /etc/yum.repos.d/rpmsphere-noarch.repo
 [rpmsphere-noarch]
@@ -170,7 +170,7 @@ function install_balena_etcher(){
 }
 
 ###### Install asusctl
-function install asusctl(){
+function install_asusctl(){
   sudo dnf -y install asusctl
   sudo dnf -y install asusctl-rog-gui
 
@@ -225,7 +225,7 @@ function install_virtualbox(){
 }
 
 ### Install printer software
-function install _hplip(){
+function install_hplip(){
   sudo dnf -y install hplip-gui
   echo "Configure oa via CUPS!"
 }
@@ -261,7 +261,12 @@ function install_my_zsh
 
 
 function main(){
-
+  enable_sudo
+  dnf_update_all
+  install_rpmsphere
+  install_rpmfusion
+  install_nvidia
+  install_vscode
 
 }
 
