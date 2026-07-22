@@ -250,7 +250,7 @@ function install_rclone(){
 
 
 ### Browser Brave
-function install_brace(){
+function install_brave(){
   sudo dnf -y install dnf-plugins-core
   sudo dnf -y config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
   sudo dnf -y install brave-browser
@@ -267,6 +267,10 @@ function main(){
   install_rpmfusion
   install_nvidia
   install_vscode
+  install_gnome_extensions
+  install_google_chrome
+  install_brave
+
 
 }
 
