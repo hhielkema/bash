@@ -7,15 +7,21 @@ sudo usermod -aG wheel "${USER}"
 
 
 ###### General update
-sudo dnf -y update
+function dnf_update_all(){
+  sudo dnf -y install vim bash-completion
+  sudo dnf -y update
+}
 
 ####### Install rpm fusion
-sudo dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
-sudo dnf -y install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+function install_rpmfusion(){
+  sudo dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+  sudo dnf -y install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+}
 
 ##### Install rpm sphere
-sudo touch /etc/yum.repos.d/rpmsphere.repo
-sudo bash -c 'cat <<EOF> /etc/yum.repos.d/rpmsphere-noarch.repo
+function install_rpmspheren(){
+  sudo touch /etc/yum.repos.d/rpmsphere.repo
+  sudo bash -c 'cat <<EOF> /etc/yum.repos.d/rpmsphere-noarch.repo
 [rpmsphere-noarch]
 name=RPM Sphere - Noarch
 baseurl=https://github.com/rpmsphere/noarch/raw/master/
@@ -24,23 +30,26 @@ gpgcheck=0
 enabled=1
 EOF'
 
-sudo dnf -y install rpmsphere-release
+  # Install rpm
+  sudo dnf -y install rpmsphere-release
+}
 
 ###### Install Nvidia
 ##### Install devlopment software
-sudo dnf -y install kernel-devel kernel-headers gcc make dkms acpid libglvnd-glx libglvnd-opengl libglvnd-devel pkgconfig
-
-sudo dnf -y update
-sudo dnf -y makecache
-sudo dnf -y install akmod-nvidia-580xx xorg-x11-drv-nvidia-580xx-cuda
+function install_nvidia(){
+  sudo dnf -y install kernel-devel kernel-headers gcc make dkms acpid libglvnd-glx libglvnd-opengl libglvnd-devel pkgconfig
+  sudo dnf -y update
+  sudo dnf -y makecache
+  sudo dnf -y install akmod-nvidia-580xx xorg-x11-drv-nvidia-580xx-cuda
+}
 
 ###### Install VScode
-sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+function install_vscode(){
+  sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
 
-##### Create vscode.repo
-
-sudo touch /etc/yum.repos.d/vscode.repo
-sudo bash -c 'cat <<EOF> /etc/yum.repos.d/vscode.repo
+  # Create vscode.repo
+  sudo touch /etc/yum.repos.d/vscode.repo
+  sudo bash -c 'cat <<EOF> /etc/yum.repos.d/vscode.repo
 [code]
 name=Visual Studio Code
 baseurl=https://packages.microsoft.com/yumrepos/vscode
@@ -48,39 +57,39 @@ enabled=1\ngpgcheck=1
 gpgkey=https://packages.microsoft.com/keys/microsoft.asc"
 EOF'
 
-##### dnf update
-sudo dnf -y check-update
+  # dnf update
+  sudo dnf -y check-update
 
-##### Install the actual code editor
-sudo dnf -y install code
+  # Install the actual code editor
+  sudo dnf -y install code
 
-#### Install code extensions
-# code -install-extension davidanson.vscode-markdownlint
-# code -install-extension esbenp.prettier-vscode
-# code -install-extension github.copilot
-# code -install-extension github.copilot-chat
-# code -install-extension keesschollaart.vscode-home-assistant
-# code -install-extension ms-azuretools.vscode-docker
-# code -install-extension ms-kubernetes-tools.vscode-kubernetes-tools
-# code -install-extension ms-python.debugpy
-# code -install-extension ms-python.python
-# code -install-extension ms-python.vscode-pylance
-# code -install-extension ms-vscode.makefile-tools
-# code -install-extension ms-vscode.remote-explorer
-# code -install-extension ms-vscode-remote.remote-containers
-# code -install-extension ms-vscode-remote.remote-ssh
-# code -install-extension ms-vscode-remote.remote-ssh-edit
-# code -install-extension pkief.material-icon-theme
-# code -install-extension redhat.ansible
-# code -install-extension redhat.vscode-yaml
-# code -install-extension rust-lang.rust-analyzer
-# code -install-extension trunk.io
-# code -install-extension zainchen.json
+  #### Install code extensions
+  # code -install-extension davidanson.vscode-markdownlint
+  # code -install-extension esbenp.prettier-vscode
+  # code -install-extension github.copilot
+  # code -install-extension github.copilot-chat
+  # code -install-extension keesschollaart.vscode-home-assistant
+  # code -install-extension ms-azuretools.vscode-docker
+  # code -install-extension ms-kubernetes-tools.vscode-kubernetes-tools
+  # code -install-extension ms-python.debugpy
+  # code -install-extension ms-python.python
+  # code -install-extension ms-python.vscode-pylance
+  # code -install-extension ms-vscode.makefile-tools
+  # code -install-extension ms-vscode.remote-explorer
+  # code -install-extension ms-vscode-remote.remote-containers
+  # code -install-extension ms-vscode-remote.remote-ssh
+  # code -install-extension ms-vscode-remote.remote-ssh-edit
+  # code -install-extension pkief.material-icon-theme
+  # code -install-extension redhat.ansible
+  # code -install-extension redhat.vscode-yaml
+  # code -install-extension rust-lang.rust-analyzer
+  # code -install-extension trunk.io
+  # code -install-extension zainchen.json
 
-#### Set the settings.json
-# install -d ~/.config/Code/User
-# sudo touch /~/.config/Code/User/settings.json
-# sudo bash -c 'cat <<EOF> ~/.config/Code/User/settings.json
+  # Set the settings.json
+  # install -d ~/.config/Code/User
+  # sudo touch /~/.config/Code/User/settings.json
+  # sudo bash -c 'cat <<EOF> ~/.config/Code/User/settings.json
 # {
 #     "workbench.colorTheme": "Monokai Dimmed",
 #     "workbench.iconTheme": "material-icon-theme",
@@ -121,100 +130,143 @@ sudo dnf -y install code
 #     "editor.fontVariations": false
 # }
 # EOF'
-###### End VScode
+}
 
-###### gnome-shell-extensions
-sudo dnf -y install gnome-extensions-app
-sudo dnf -y install gnome-shell-extension-dash-to-panel
+##### gnome-shell-extensions
+function install_gnome_extensions(){
+  sudo dnf -y install gnome-extensions-app
+  sudo dnf -y install gnome-shell-extension-dash-to-panel
+  sudo dnf -y install gnome-tweaks
+}
 
 ###### Install Google Chrome
-sudo dnf -y install fedora-workstation-repositories
-sudo dnf config-manager --setopt google-chrome.enabled=1
-sudo dnf -y install google-chrome-stable
+function install_google_chrome(){
+  sudo dnf -y install fedora-workstation-repositories
+  sudo dnf config-manager --setopt google-chrome.enabled=1
+  sudo dnf -y install google-chrome-stable
+}
 
 ###### Install Mozilla Thunderbird
-sudo dnf -y install thunderbird
+function install_thunderbird(){
+  sudo dnf -y install thunderbird
+}
 
 ###### Install VLC
-sudo dnf -y install vlc
+function install_vlc(){
+  sudo dnf -y install vlc
+}
 
 ###### Install Audacity
-sudo dnf -y install audacity
+function install_audacity(){
+  sudo dnf -y install audacity
+}
 
-###### Balena Echter
-latest_etcher_tag=$(git ls-remote --tags  https://github.com/balena-io/etcher|awk {'print$2'}|cut -d/ -f3|sort -V|tail -2|head -1|sed 's/^v\(.*\)/\1/') # 1.19.25^{}
-sudo dnf -y install https://github.com/balena-io/etcher/releases/download/v${latest_etcher_tag}/balena-etcher-${latest_etcher_tag}-1.x86_64.rpm
+###### Balena Etcher
+function install_balena_etcher(){
+  $ Variables
+  latest_etcher_tag=$(git ls-remote --tags  https://github.com/balena-io/etcher|awk {'print$2'}|cut -d/ -f3|sort -V|tail -2|head -1|sed 's/^v\(.*\)/\1/') # 1.19.25^{}
+  # Install latest Etcher
+  sudo dnf -y install https://github.com/balena-io/etcher/releases/download/v${latest_etcher_tag}/balena-etcher-${latest_etcher_tag}-1.x86_64.rpm
+}
 
 ###### Install asusctl
-sudo dnf -y install asusctl
-sudo dnf -y install asusctl-rog-gui
+function install asusctl(){
+  sudo dnf -y install asusctl
+  sudo dnf -y install asusctl-rog-gui
 
-systemctl start asusd
+  systemctl enable asusd
+  systemctl start asusd
+}
 
-###### Install Vagrant
+##### Install Vagrant
+function install_vagrant(){
 sudo dnf -y install vagrant
+}
 
-### Install VirtualBox
-## Create empty repo file
-sudo touch /etc/yum.repos.d/virtualbox.repo
+##### Install VirtualBox
+function install_virtualbox(){
+  # Install esential packages
+  sudo dnf install kernel-devel kernel-headers gcc make perl elfutils-libelf-devel
 
-## Populate the file
-sudo bash -c 'cat <<EOF> /etc/yum.repos.d/virtualbox.repo
-[virtualbox]
-name=Fedora $releasever - $basearch - VirtualBox
-baseurl=http://download.virtualbox.org/virtualbox/rpm/fedora/\$releasever/\$basearch
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://www.virtualbox.org/download/oracle_vbox_2016.asc
-EOF'
+  # Download Virtualbox  repo file
+  sudo curl -o /etc/yum.repos.d/virtualbox.test http://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo
 
-## Install the gpg key
-sudo rpm --import https://www.virtualbox.org/download/oracle_vbox_2016.asc
+  # Install the gpg key
+  sudo rpm --import https://www.virtualbox.org/download/oracle_vbox_2016.asc
 
-## Install the Virtualbox rpm(s)
-sudo dnf -y install VirtualBox
+  # Install the Virtualbox rpm(s)
+  sudo dnf install VirtualBox
 
-virtualbox_rpm=$(rpm -qa|grep -e ^VirtualBox-[0-9])                          # VirtualBox-7.1.2-1.fc40.x86_64
-virtualbox_version=$(rpm -q --queryformat '%{VERSION}' ${virtualbox_rpm})    # 7.1.2
-virtualbox_extpack="Oracle_VirtualBox_Extension_Pack-${virtualbox_version}.vbox-extpack"
-curl https://download.virtualbox.org/virtualbox/${virtualbox_version}/${virtualbox_extpack} -o ~/Downloads/virtualbox/${virtualbox_extpack}
+  # Add user to vboxusers group
+  sudo usermod -a -G vboxusers ${USER}
 
-# FIXME, how to add extpack to virtualbox via commandline
+  # Configuree VirtualBox Drivers
+  #sudo /usr/lib/virtualbox/vboxdrv.sh setup
+  #sudo /sbin/vboxconfig
 
-## Activate Virtualbox
-sudo akmods
-sudo systemctl restart vboxdrv.service
+  virtualbox_download="~/Download/virtualbox"
+  virtualbox_version=$(rpm -qa --qf "%{NAME}:%{VERSION}\n" | grep -e '^VirtualBox-'|cut -d: -f2|sort -ui)
+  virtualbox_latest=$(curl -s https://download.virtualbox.org/virtualbox/LATEST.TXT)
+  virtualbox_extpack="Oracle_VM_VirtualBox_Extension_Pack-${virtualbox_version}.vbox-extpack"
+  virtualbox_url="https://download.virtualbox.org/virtualbox/${virtualbox_version}/"
+  
+  # Make sure download subdir is present
+  install -d ${virtualbox_download}
+
+  cd ${virtualbox_download}
+  wget "${virtualbox_url}/${virtualbox_extpack}"
+
+  # Install Extension pack
+  sudo echo "y" | VBoxManage extpack install --replace --accept-license=sha256 ${virtualbox_download}/${virtualbox_extpack}
+
+  ## Activate Virtualbox
+  sudo akmods --force
+  sudo systemctl restart vboxdrv.service
+}
 
 ### Install printer software
-sudo dnf -y install hplip-gui
-echo "Configure oa via CUPS!"
+function install _hplip(){
+  sudo dnf -y install hplip-gui
+  echo "Configure oa via CUPS!"
+}
 
 ### Nordvpn
-nordvpnurl="https://downloads.nordcdn.com/apps/linux/install.sh"
-sudo sh <(curl -sSf ${nordvpnurl})
-sudo usermod -aG nordvpn "${USER}"
-
-### Generic
-sudo dnf -y install vim bash-completion
-
-### gnome-tweaks
-sudo dnf -y install gnome-tweaks
+function install_nordvpn(){
+  nordvpnurl="https://downloads.nordcdn.com/apps/linux/install.sh"
+  sudo sh <(curl -sSf ${nordvpnurl})
+  sudo usermod -aG nordvpn "${USER}"
+}
 
 ### Rclone
-sudo dnf -y install rclone fuse
-mkdir ~/gdrive
-rclone config
-systemctl --user daemon-reload
-systemctl --user enable rclone-gdrive.service
-systemctl --user start rclone-gdrive.service
-loginctl enable-linger $USER 
+function install_rclone(){
+  sudo dnf -y install rclone fuse
+  mkdir ~/gdrive
+  rclone config
+  systemctl --user daemon-reload
+  systemctl --user enable rclone-gdrive.service
+  systemctl --user start rclone-gdrive.service
+  loginctl enable-linger $USER 
+}
+
 
 ### Browser Brave
-sudo dnf -y install dnf-plugins-core
-sudo dnf -y config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
-sudo dnf -y install brave-browser
+function install_brace(){
+  sudo dnf -y install dnf-plugins-core
+  sudo dnf -y config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+  sudo dnf -y install brave-browser
+}
 
+
+function install_my_zsh
+
+
+function main(){
+
+
+}
+
+## Main
+main
 
 ### Reboot laptop
-sudo reboot
+#sudo reboot
