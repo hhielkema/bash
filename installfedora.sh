@@ -20,7 +20,7 @@ function install_rpmfusion(){
 
 ##### Install rpm sphere
 function install_rpmsphere(){
-  sudo touch /etc/yum.repos.d/rpmsphere.repo
+  sudo touch /etc/yum.repos.d/rpmsphere-noarch.repo
   sudo bash -c 'cat <<EOF> /etc/yum.repos.d/rpmsphere-noarch.repo
 [rpmsphere-noarch]
 name=RPM Sphere - Noarch
@@ -41,6 +41,23 @@ function install_nvidia(){
   sudo dnf -y update
   sudo dnf -y makecache
   sudo dnf -y install akmod-nvidia-580xx xorg-x11-drv-nvidia-580xx-cuda
+}
+
+#### Install asus-linux for Fedora
+function install_asus_keyboard(){
+  #
+  sudo dnf install --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
+  #
+  sudo dnf install asusctl
+  # Enable and start the systemd service:
+  systemctl enable --now asusd.service
+  #To avoid problems with tuned, you should use ppd.
+  sudo dnf swap tuned-ppd power-profiles-daemon --allowerasing
+  systemctl enable --now power-profiles-daemon.service
+  # ROG Control Center is a GUI tool that can be used to configure asusctl. 
+  # After adding the Terra or COPR repository as described above, you can now install the tool:
+  sudo dnf install asusctl-rog-gui
+
 }
 
 ###### Install VScode
@@ -137,12 +154,18 @@ function install_gnome_extensions(){
   sudo dnf -y install gnome-extensions-app
   sudo dnf -y install gnome-shell-extension-dash-to-panel
   sudo dnf -y install gnome-tweaks
+
+  for extension in $(gnome-extensions list); do
+    echo "gnome-extensions enable $extension"
+    gnome-extensions enable $extension
+  done  
+
 }
 
 ###### Install Google Chrome
 function install_google_chrome(){
   sudo dnf -y install fedora-workstation-repositories
-  sudo dnf config-manager --setopt google-chrome.enabled=1
+  sudo dnf config-manager setopt google-chrome.enabled=1
   sudo dnf -y install google-chrome-stable
 }
 
@@ -186,7 +209,7 @@ sudo dnf -y install vagrant
 ##### Install VirtualBox
 function install_virtualbox(){
   # Install esential packages
-  sudo dnf install kernel-devel kernel-headers gcc make perl elfutils-libelf-devel
+  sudo dnf -y install kernel-devel kernel-headers gcc make perl elfutils-libelf-devel
 
   # Download Virtualbox  repo file
   sudo curl -o /etc/yum.repos.d/virtualbox.test http://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo
@@ -195,7 +218,7 @@ function install_virtualbox(){
   sudo rpm --import https://www.virtualbox.org/download/oracle_vbox_2016.asc
 
   # Install the Virtualbox rpm(s)
-  sudo dnf install VirtualBox
+  sudo dnf -y install VirtualBox
 
   # Add user to vboxusers group
   sudo usermod -a -G vboxusers ${USER}
@@ -240,14 +263,49 @@ function install_nordvpn(){
 ### Rclone
 function install_rclone(){
   sudo dnf -y install rclone fuse
-  mkdir ~/gdrive
+  install -d ~/gdrive
   rclone config
+
+
+  # Create systemd user subdir
+  install -d ~/.config/systemd/user
+
+  # Create systemd file for automatic rclone of Google Drive.
+  cat <<EOF > ~/.config/systemd/user/rclone-gdrive.service
+[Unit]
+Description=Rclone Google Drive (rclone-gdrive)
+AssertPathIsDirectory=/home/${USER}/gdrive
+After=network-online.target
+
+[Service]
+Type=simple
+User=${USER}
+Group=${USER}
+ExecStart=/usr/bin/rclone mount \
+  --config=/home/${USER}/.config/rclone/rclone.conf \
+  --allow-other \
+  --vfs-cache-mode=full \
+  gdrive: /home/${USER}/gdrive
+ExecStop=/bin/fusermount -uz /home/${USER}/gdrive
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+EOF
+
+  #
+  sudo cat <<EOF > /etc/fuse.conf
+# mount_max = 1000
+user_allow_other
+EOF
+
+  #
   systemctl --user daemon-reload
   systemctl --user enable rclone-gdrive.service
   systemctl --user start rclone-gdrive.service
   loginctl enable-linger $USER 
 }
-
 
 ### Browser Brave
 function install_brave(){
@@ -257,12 +315,16 @@ function install_brave(){
 }
 
 
-function install_my_zsh
+function install_my_zshi(){
+  echo "Install My ZSH"
+
+}
 
 
 function main(){
   enable_sudo
   dnf_update_all
+  install_asus_keyboard
   install_rpmsphere
   install_rpmfusion
   install_nvidia
