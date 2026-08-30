@@ -45,7 +45,7 @@ function install_nvidia(){
 
 #### Install asus-linux for Fedora
 function install_asus_keyboard(){
-  #
+  # https://asus-linux.org/guides/fedora-guide/
   sudo dnf install --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
   #
   sudo dnf install asusctl
@@ -203,6 +203,7 @@ function install_asusctl(){
 
 ##### Install Vagrant
 function install_vagrant(){
+wget -O- https://rpm.releases.hashicorp.com/fedora/hashicorp.repo | sudo tee /etc/yum.repos.d/hashicorp.repo
 sudo dnf -y install vagrant
 }
 
