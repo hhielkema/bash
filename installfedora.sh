@@ -186,7 +186,7 @@ function install_audacity(){
 
 ###### Balena Etcher
 function install_balena_etcher(){
-  $ Variables
+  # Variables
   latest_etcher_tag=$(git ls-remote --tags  https://github.com/balena-io/etcher|awk {'print$2'}|cut -d/ -f3|sort -V|tail -2|head -1|sed 's/^v\(.*\)/\1/') # 1.19.25^{}
   # Install latest Etcher
   sudo dnf -y install https://github.com/balena-io/etcher/releases/download/v${latest_etcher_tag}/balena-etcher-${latest_etcher_tag}-1.x86_64.rpm
@@ -304,7 +304,7 @@ EOF
   #
   systemctl --user daemon-reload
   systemctl --user enable rclone-gdrive.service
-  systemctl --user start rclone-gdrive.service
+  systemctl --user start  rclone-gdrive.service
   loginctl enable-linger $USER 
 }
 
@@ -316,11 +316,52 @@ function install_brave(){
 }
 
 
-function install_my_zshi(){
-  echo "Install My ZSH"
+function install_my_zsh(){
+  echo "Under Construction: Install My ZSH"
 
 }
 
+function install_docker_desktop(){
+# https://docs.docker.com/engine/install/fedora/#set-up-the-repository
+
+  #
+  sudo dnf remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-selinux \
+                  docker-engine-selinux \
+                  docker-engine \
+                  podman-docker 
+
+  #
+  sudo dnf config-manager addrepo --from-repofile https://download.docker.com/linux/fedora/docker-ce.repo
+
+  #
+  sudo dnf -y install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+  #
+  sudo systemctl enable --now docker
+
+  #
+  sudo dnf -y install https://desktop.docker.com/linux/main/amd64/docker-desktop-x86_64.rpm
+ }
+
+
+function install_discord_desktop(){
+  #
+  sudo dnf -y install discord
+}
+
+function install_music_assistant(){
+  #
+  latest_music_assistant_tag=$(git ls-remote --tags https://github.com/music-assistant/desktop-app/|awk {'print$2'}|cut -d/ -f3|sort -V|tail -2|head -1|sed 's/^v\(.*\)/\1/') # 1.19.25^{}
+  # Install latest Music Assistant
+    sudo dnf -y install https://github.com/music-assistant/desktop-app/releases/download/${latest_music_assistant_tag}/Music.Assistant-${latest_music_assistant_tag}-1.x86_64.rpm
+}
 
 function main(){
   enable_sudo
@@ -333,8 +374,10 @@ function main(){
   install_gnome_extensions
   install_google_chrome
   install_brave
-
-
+  install_my_zsh
+  install_docker_desktop
+  install_discord_desktop
+  install_music_assistant
 }
 
 ## Main
